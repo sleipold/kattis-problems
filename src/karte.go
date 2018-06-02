@@ -14,10 +14,9 @@ func hasDuplicates(elements []string) bool {
 	for v := range elements {
 		if encountered[elements[v]] == true {
 			return true
-		} else {
-			// Record this element as an encountered element.
-			encountered[elements[v]] = true
 		}
+		// Record this element as an encountered element.
+		encountered[elements[v]] = true
 	}
 	// Found no duplicates in elements.
 	return false
