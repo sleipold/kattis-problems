@@ -36,7 +36,9 @@ func min(a, b int) int {
 
 func calcScore(cards map[string]int) int {
 	score := 0
-	score += cards["T"]*cards["T"] + cards["C"]*cards["C"] + cards["G"]*cards["G"]
+	for i := range cards {
+		score += cards[i] * cards[i]
+	}
 	score += min(min(cards["T"], cards["C"]), cards["G"]) * 7
 	return score
 }
