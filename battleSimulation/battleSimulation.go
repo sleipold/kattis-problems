@@ -2,34 +2,38 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
+	"strings"
 )
 
-func main() {
-
-	attacksAndCounters := map[rune]rune{
-		'R': 'S',
-		'B': 'K',
-		'L': 'H',
-	}
-
-	reader := bufio.NewReader(os.Stdin)
-	attacks, _ := reader.ReadString('\n')
-
-	queue := []rune(attacks)
-	queue = queue[:len(queue)-2] // remove the last two elements ('\r\n')
-	var counters bytes.Buffer
-
-	for len(queue) != 0 {
-		if len(queue) >= 3 && queue[0] != queue[1] && queue[1] != queue[2] && queue[0] != queue[2] {
-			queue = queue[3:]
-			counters.WriteString("C")
-		} else {
-			counters.WriteString(string(attacksAndCounters[queue[0]]))
-			queue = queue[1:]
+func defend(offSeq string, permutations []string) string {
+	defSeq := ""
+	for _, char := range offSeq {
+		switch attack := char; attack {
+		case 'R':
+			defSeq += "S"
+		case 'B':
+			defSeq += "K"
+		case 'L':
+			defSeq += "H"
 		}
 	}
-	fmt.Print(counters.String())
+
+	for _, currPerm := range permutations {
+		if idx := strings.Index(defSeq, currPerm); idx != -1 {
+			defSeq = strings.Replace(defSeq, currPerm, "C", 1)
+		}
+	}
+
+	return defSeq
+}
+
+func main() {
+	reader := bufio.NewReader(os.Stdin)
+	offSeq, _ := reader.ReadString('\n')
+	permutations := make([]string, 0)
+	permutations = append(permutations, "SKH", "KSH", "KHS", "SHK", "HSK", "HKS")
+	defSeq := defend(offSeq, permutations)
+	fmt.Println(defSeq)
 }
