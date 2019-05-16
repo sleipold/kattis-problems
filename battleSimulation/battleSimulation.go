@@ -4,25 +4,24 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 )
 
-func defend(offSeq string, permutations []string) string {
+func defend(offSeq string) string {
 	defSeq := ""
-	for _, char := range offSeq {
-		switch attack := char; attack {
-		case 'R':
-			defSeq += "S"
-		case 'B':
-			defSeq += "K"
-		case 'L':
-			defSeq += "H"
-		}
-	}
 
-	for _, currPerm := range permutations {
-		if idx := strings.Index(defSeq, currPerm); idx != -1 {
-			defSeq = strings.Replace(defSeq, currPerm, "C", 1)
+	for i := 0; i < len(offSeq); i++ {
+		if len(offSeq)-i > 3 && offSeq[i]+offSeq[i+1]+offSeq[i+2] == 224 {
+			defSeq += "C"
+			i += 2
+		} else {
+			switch string(offSeq[i]) {
+			case "R":
+				defSeq += "S"
+			case "B":
+				defSeq += "K"
+			case "L":
+				defSeq += "H"
+			}
 		}
 	}
 
@@ -32,8 +31,6 @@ func defend(offSeq string, permutations []string) string {
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	offSeq, _ := reader.ReadString('\n')
-	permutations := make([]string, 0)
-	permutations = append(permutations, "SKH", "KSH", "KHS", "SHK", "HSK", "HKS")
-	defSeq := defend(offSeq, permutations)
-	fmt.Println(defSeq)
+
+	fmt.Println(defend(offSeq))
 }
